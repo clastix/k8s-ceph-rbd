@@ -1,0 +1,173 @@
+cephConfConfigMapName: ceph-config
+cephLogDirHostPath: /var/log/ceph
+cephconf: |
+  [global]
+    auth_cluster_required = cephx
+    auth_service_required = cephx
+    auth_client_required = cephx
+configMapName: ceph-csi-config
+csiConfig:
+- clusterID: eb94b723-d230-41e0-8827-f1c6460a3184
+  monitors:
+  - 10.9.46.234:6789
+  - 10.9.46.235:6789
+  - 10.9.46.236:6789
+csiMapping: []
+driverName: rbd.csi.ceph.com
+encryptionKMSConfig: {}
+externallyManagedConfigmap: false
+kmsConfigMapName: ceph-csi-encryption-kms-config
+kubeletDir: /var/lib/kubelet
+logLevel: 5
+nodeplugin:
+  affinity: {}
+  httpMetrics:
+    containerPort: 8080
+    enabled: true
+    service:
+      annotations: {}
+      clusterIP: ""
+      enabled: true
+      externalIPs: []
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      servicePort: 8080
+      type: ClusterIP
+  name: nodeplugin
+  nodeSelector:
+    node-role.kubernetes.io/infra: ""
+  plugin:
+    image:
+      pullPolicy: IfNotPresent
+      repository: quay.io/cephcsi/cephcsi
+      tag: v3.7.1
+    resources: {}
+  podSecurityPolicy:
+    enabled: false
+  priorityClassName: system-node-critical
+  profiling:
+    enabled: false
+  registrar:
+    image:
+      pullPolicy: IfNotPresent
+      repository: registry.k8s.io/sig-storage/csi-node-driver-registrar
+      tag: v2.5.1
+    resources: {}
+  tolerations: []
+  updateStrategy: RollingUpdate
+pluginSocketFile: csi.sock
+provisioner:
+  affinity: {}
+  attacher:
+    enabled: true
+    image:
+      pullPolicy: IfNotPresent
+      repository: registry.k8s.io/sig-storage/csi-attacher
+      tag: v3.5.0
+    name: attacher
+    resources: {}
+  defaultFSType: ext4
+  deployController: true
+  enableHostNetwork: false
+  hardMaxCloneDepth: 8
+  httpMetrics:
+    containerPort: 8080
+    enabled: true
+    service:
+      annotations: {}
+      clusterIP: ""
+      enabled: true
+      externalIPs: []
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      servicePort: 8080
+      type: ClusterIP
+  maxSnapshotsOnImage: 450
+  minSnapshotsOnImage: 250
+  name: provisioner
+  nodeSelector:
+    node-role.kubernetes.io/infra: ""
+  podSecurityPolicy:
+    enabled: false
+  priorityClassName: system-cluster-critical
+  profiling:
+    enabled: false
+  provisioner:
+    image:
+      pullPolicy: IfNotPresent
+      repository: gcr.io/k8s-staging-sig-storage/csi-provisioner
+      tag: v3.2.1
+    resources: {}
+  replicaCount: 1
+  resizer:
+    enabled: true
+    image:
+      pullPolicy: IfNotPresent
+      repository: registry.k8s.io/sig-storage/csi-resizer
+      tag: v1.5.0
+    name: resizer
+    resources: {}
+  setmetadata: true
+  snapshotter:
+    image:
+      pullPolicy: IfNotPresent
+      repository: registry.k8s.io/sig-storage/csi-snapshotter
+      tag: v6.0.1
+    resources: {}
+  softMaxCloneDepth: 4
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 50%
+    type: RollingUpdate
+  timeout: 60s
+  tolerations: []
+provisionerSocketFile: csi-provisioner.sock
+rbac:
+  create: true
+secret:
+  create: true
+  encryptionPassphrase: test_passphrase
+  name: csi-rbd-secret
+  userID: kubernetes
+  userKey: AQARdh5hp6CHDBAAgPz0qJfMyGv1NYaaTFMmfw==
+selinuxMount: true
+serviceAccounts:
+  nodeplugin:
+    create: true
+    name: null
+  provisioner:
+    create: true
+    name: null
+sidecarLogLevel: 1
+storageClass:
+  allowVolumeExpansion: true
+  annotations: {}
+  cephLogDir: ""
+  cephLogStrategy: ""
+  clusterID: eb94b723-d230-41e0-8827-f1c6460a3184
+  controllerExpandSecret: csi-rbd-secret
+  controllerExpandSecretNamespace: ""
+  create: true
+  dataPool: ""
+  encrypted: ""
+  encryptionKMSID: ""
+  fstype: ext4
+  imageFeatures: layering
+  mapOptions: ""
+  mountOptions: []
+  mounter: ""
+  name: csi-rbd-sc
+  nodeStageSecret: csi-rbd-secret
+  nodeStageSecretNamespace: ""
+  pool: kubernetes
+  provisionerSecret: csi-rbd-secret
+  provisionerSecretNamespace: ""
+  reclaimPolicy: Retain
+  topologyConstrainedPools: []
+  unmapOptions: ""
+  volumeNamePrefix: ""
+topology:
+  domainLabels:
+  - failure-domain/region
+  - failure-domain/zone
+  enabled: false
